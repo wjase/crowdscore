@@ -1,0 +1,141 @@
+<html>
+<head>
+</head>
+<body>
+<h1>Introduction</h1>
+<p><b> "Namaste everyone"</b>.  REST API is the common web service mechanism that we can find on any system. Using a web service, applications can talk with each other without directly asking for data from database. So in this article we are trying to make an attempt to build a basic RESTful API with Golang and MySQL. I here use an HTTP framework called Gin for creating an API server. Gin is faster because it is built on top of httprouter.</p>
+<p>Note: Since you are here, you like building REST API with Go, I wrote a cool book on this topic that could help you!</p>
+<p><a href="https://www.amazon.com/Building-RESTful-Web-services-Go/dp/1788294289">Building RESTFul web services with Go - Amazon</a> &nbsp;&nbsp;&nbsp;<img src="https://www.packtpub.com/sites/default/files/9781788294287%20-%20Copy.png" alt="Smiley face" height="120" width="120"></p>
+<p>By the end of this article, you will be comfortable in exploring various things in the process of developing a REST API.</p>
+<h2>Setup &amp; Dependencies</h2>
+<p>We need Go compiler for running and building our API. So we hope Go, MySQL server are installed in your system. If not on Ubuntu14.04 machine you can do this.</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo add-apt-repository ppa:gophers/go
+<span class="nv">$ </span>sudo apt-get update
+<span class="nv">$ </span>sudo apt-get install golang-stable
+<span class="nv">$ </span>sudo apt-get install mysql-server
+</pre></div>
+
+
+<p>Now set the $GOPATH variable creating a new folder in your home. $GOPATH is where your external packages and libraries are stored. My ~/.bashrc looks like this.</p>
+<div class="highlight"><pre><span class="x">export GOPATH=/home/naren/mygo</span>
+<span class="x">export PATH=</span><span class="p">$</span><span class="nv">PATH</span><span class="x">::/usr/local/go/bin</span>
+<span class="x">export PATH=</span><span class="p">$</span><span class="nv">PATH</span><span class="x">:</span><span class="p">$</span><span class="nv">GOPATH</span><span class="x">/bin</span>
+</pre></div>
+
+
+<p>Now we are ready with setup. Let us install dependencies.</p>
+<div class="highlight"><pre><span class="nv">$ </span>go get <span class="s2">&quot;github.com/go-sql-driver/mysql&quot;</span>
+<span class="nv">$ </span>go get <span class="s2">&quot;github.com/gin-gonic/gin&quot;</span>
+</pre></div>
+
+
+<p>Now we have everything to proceed. For development chose your favorite text editor. My favorites are both Atom and Sublime Text 3. Both have very good tooling for Go.</p>
+<p>source code &amp; build for this API is available at  <a style="color:indianred" href="https://github.com/narenaryan/go-mysql-rest-api" target="_blank"> Source code</a></p>
+<p>A basic REST API has these four important methods.</p>
+<ul>
+<li>GET</li>
+<li>POST</li>
+<li>PUT</li>
+<li>DELETE</li>
+</ul>
+<p>In the below section, we are going to create an API for Person details.</p>
+<h3>Required imports</h3>
+<script src="https://gist.github.com/narenaryan/ef888aa3e9f02568eb0ccfe078d6c698.js"></script>
+
+<p>Imports on line no's <b>3, 5, 7, 8</b> are functional requirements. Remaining imports are utilities which are helpful in course of time. sql-driver and martini are essential for our API.</p>
+<p>First create a database called "gotest" in your MySQL shell.</p>
+<div class="highlight"><pre>CREATE DATABASE gotest
+</pre></div>
+
+
+<h3>Creating Person Table in DB</h3>
+<p>Now let us write a migration file in Go to create Person table in gotest.</p>
+<script src="https://gist.github.com/narenaryan/c1bbe695b815b7a1703889bb2ff62120.js"></script>
+
+<p>Here only line no's 10, 21 and 25 are interesting. Others are just error handling statements. One notable point here is we are actually pinging server using <b>db.Ping()</b> to find out whether DB is reachable. "sql.Open" do not give any error if the machine is not accessible. So we should ping and confirm it.</p>
+<p>Now <b>person</b> table looks like this</p>
+<p><img src="../images/person.png" height="300px width="400px"></p>
+<p><a href="https://github.com/gin-gonic/gin">Gin</a> is a very simple HTTP framework for writing application servers.</p>
+<p>Now we can jump into the actual development of API server. We can first create a bare structure of our main program.</p>
+<script src="https://gist.github.com/narenaryan/29037098b2a4f07865f0cf384261f305.js"></script>
+
+<p>In every gin app, we should create a Default or New gin router</p>
+<div class="highlight"><pre>router := gin.Default()
+</pre></div>
+
+
+<p>We can specify <b>:port</b> on which our Gin applications run using</p>
+<div class="highlight"><pre>router.Run(&quot;:3000&quot;) // server runs on 3000 port
+</pre></div>
+
+
+<p>We are creating a struct called Person to map with Person table in DB. We actually use these structs to receive data at the time of fetching records from DB.</p>
+<p>In Gin, we can attach handler functions to a particular URL. It is called URL routing. So let me add a simple GET handler to the main function.</p>
+<script src="https://gist.github.com/narenaryan/15e862ab38cf04145cf5a2b3bed49157.js"></script>
+
+<p>Every Gin handler takes two arguments</p>
+<ul>
+<li>URL</li>
+<li>Function handler with a gin.Context object</li>
+</ul>
+<p>This gin.Context object consists of information about headers, passed parameters, data posted, cookies, etc. It is also responsible in sending a response back to the client. In the above example, we are querying MySQL DB to get a person detail. We are using <b>QueryRow</b> which only returns one record if exists. Since id is a primary key, it only returns one record.</p>
+<p><b>gin.H</b> is a map which actually has methods to serialize custom data we supply to it. It should be passed to c.JSON response instead of marshalling data. Gin will take care of that.</p>
+<p>Now in the similar way add one more GET for fetching all persons.</p>
+<script src="https://gist.github.com/narenaryan/a2ea9dfa5c8c8f0addb350faa8dcc7c2.js"></script>
+
+<p>Here we are applying <b>Query</b> method to fetch a cursor and iterating over it. Then we are storing them in a slice and returning back to the client in JSON form.</p>
+<p>Now let us defined the POST handler which is intersting. </p>
+<script src="https://gist.github.com/narenaryan/574647c1c63ded647b2823f8addf078a.js"></script>
+
+<p>This code draws two points.</p>
+<ul>
+<li>Why Prepare &amp; Exec are used instead of Query?</li>
+<li>Why Buffers are used for concatenating strings?</li>
+</ul>
+<p>For the actions like writing to DB where result is not cared, using Prepare and Execute is considered as the best practise. Using <b>buffer instead of cancatenation operation gives performance boost</b>. Now let us defined the other two handlers to complete our REST API.</p>
+<script src="https://gist.github.com/narenaryan/c0d483893a653a189bab2bf31f99ce03.js"></script>
+
+<p>The code is self explanatory here. These two are same as POST handler with few changes in DB queries. <b>Sprintf</b> is commonly used to interpolate values into strings.</p>
+<p>The complete API server source looks like this.</p>
+<script src="https://gist.github.com/narenaryan/f124ea79c5b9ac54529a216a0ec8f06d.js"></script>
+
+<h3>REST API in action</h3>
+<p>Now build the program and run it.</p>
+<div class="highlight"><pre><span class="nv">$ </span>go build gitter.go
+<span class="nv">$ </span>./gitter
+</pre></div>
+
+
+<p>API server will be running on <b>http://localhost:3000</b></p>
+<ul>
+<li>Get all persons</li>
+</ul>
+<p><img src="../images/gorest/getgo.png" height="300px width="400px"></p>
+<ul>
+<li>Get user with id = 28</li>
+</ul>
+<p><img src="../images/gorest/getmanoj.png" height="300px width="400px"></p>
+<ul>
+<li>Change name from "Sagar Juthuga" to "Sagar Kumar"</li>
+</ul>
+<p><img src="../images/gorest/putsagar.png" height="300px width="400px"></p>
+<ul>
+<li>Delete user Vinay from persons list </li>
+</ul>
+<p><img src="../images/gorest/deletevinay.png" height="300px width="400px"> </p>
+<p>You can actually observe the terminal where API server is running to get time taken by requests, type of request etc. </p>
+<p><img src="../images/gorest/termgin.png" height="300px width="400px"> </p>
+<p>There are more things we need to implement to make it usable.</p>
+<ul>
+<li>Logging</li>
+<li>Authentication</li>
+</ul>
+<p>Gin provides out of box solutions for all these scenarios.</p>
+<p>This is a result of my understanding about Gin and SQL driver. I know the way here mentioned is pretty naive. Hope it will help you. Send your comments to <b><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8c6c9dacdc6c9dad1c9e8c4c1decd">[email&#160;protected]</a></b> . If you really like this article, please share it and spread the word.</p>
+<p>Thank You :)</p>
+<p><b>Note:</b> Since you are here, you like building REST API with Go, I wrote a cool book on this topic that could help you!</p>
+<p><a href="https://www.amazon.com/Building-RESTful-Web-services-Go/dp/1788294289">Building RESTFul web services with Go - Amazon</a> &nbsp;&nbsp;&nbsp;<img src="https://www.packtpub.com/sites/default/files/9781788294287%20-%20Copy.png" alt="Smiley face" height="120" width="120"></p>
+            </div>
+    
+</body>
+</html>
