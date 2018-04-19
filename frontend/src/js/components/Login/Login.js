@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import LoginForm from 'grommet/components/LoginForm';
-import loginConstants from './constants'
-import { bindActionCreators } from 'redux'
+import {bindActionCreators} from 'redux'
 import loginActions from './actions'
 
 class Login extends React.Component {

@@ -1,4 +1,4 @@
-import {LOAD_TEAMLIST_SUCCESS} from './constants';
+import {LOAD_ROUNDS_SUCCESS} from './constants';
 import roundsApi from '../../api/roundsApi';
 
 export function loadRoundsSuccess(rounds){

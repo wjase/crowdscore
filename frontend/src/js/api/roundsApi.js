@@ -1,5 +1,5 @@
 class RoundsAPI{
-    static getAllTeams(){
+    static getAllRounds(){
     return fetch("/api/heats")
         .then(response=>{
             return response.json();

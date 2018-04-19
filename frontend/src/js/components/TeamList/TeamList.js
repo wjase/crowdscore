@@ -20,7 +20,6 @@ class TeamList extends React.Component {
 
 
   render = () => {
-    console.dir(this.props);
     return (
     <div>Our worthy Teams
       <List>{this.props.teamList.map(team => (
@@ -34,8 +33,6 @@ class TeamList extends React.Component {
 
 
 const mapStateToProps = state => {
-  console.log("map state");
-  console.dir(state);
   return {
     teamList: state.teamList
   };

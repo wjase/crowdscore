@@ -20,10 +20,9 @@ class Rounds extends React.Component {
 
 
   render = () => {
-    console.dir(this.props);
     return (
     <div>Rounds
-      <List>{this.props.rounds.map(team => (
+      <List>{this.props.rounds.map(round => (
         <ListItem>{round.Description}</ListItem>))}</List>
     </div>
 
@@ -34,8 +33,6 @@ class Rounds extends React.Component {
 
 
 const mapStateToProps = state => {
-  console.log("map state");
-  console.dir(state);
   return {
     rounds: state.rounds
   };

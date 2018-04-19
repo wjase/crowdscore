@@ -15,8 +15,6 @@ const submitted = ({username,password}) => {
         loginService.login(username,password)
             .then(
                 user =>{
-                    console.log('in login callback')
-                    console.dir(user);  
                     dispatch(loginSucceeded(user));
                 },
                 error =>{
