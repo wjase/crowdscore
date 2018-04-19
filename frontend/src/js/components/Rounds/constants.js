@@ -1,0 +1,2 @@
+// export const SOME_CONST = 'SOME_CONST';
+ export const LOAD_ROUNDS_SUCCESS = 'LOAD_ROUNDS_SUCCESS';
