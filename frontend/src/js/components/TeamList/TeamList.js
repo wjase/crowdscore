@@ -23,7 +23,7 @@ class TeamList extends React.Component {
     return (
     <div>Our worthy Teams
       <List>{this.props.teamList.map(team => (
-        <ListItem>Team: {team.Description}</ListItem>))}</List>
+        <ListItem key={team.ID}>Team: {team.Description}</ListItem>))}</List>
     </div>
 
   )};

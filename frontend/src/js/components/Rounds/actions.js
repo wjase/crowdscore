@@ -12,7 +12,10 @@ export const loadRounds = () => {
 
         return roundsApi.getAllRounds()
             .then(rounds => {
-                dispatch(loadRoundsSuccess(rounds));
+                dispatch(loadRoundsSuccess(rounds.map(x=>{
+                    x.key =x.ID;
+                    return x;
+                })));
             })
         .catch(error => {throw error;});
     };

@@ -5,7 +5,6 @@ import {bindActionCreators} from 'redux';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
 
-
 class Rounds extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -18,19 +17,16 @@ class Rounds extends React.Component {
     teamList: []
   }
 
-
   render = () => {
     return (
     <div>Rounds
       <List>{this.props.rounds.map(round => (
-        <ListItem>{round.Description}</ListItem>))}</List>
+        <ListItem key={round.ID}>{round.Description}</ListItem>))}</List>
     </div>
 
   )};
 
 }
-
-
 
 const mapStateToProps = state => {
   return {

@@ -25,8 +25,6 @@ import {BrowserRouter as Router, Link, Route} from "react-router-dom";
 import Switch from 'react-router-dom/Switch';
 import MenuIcon from 'grommet/components/icons/base/Menu';
 
-//import { polyfill as promisePolyfill } from 'es6-promise';
-
 const store = configureStore({});
 
 // initial rest fetch
