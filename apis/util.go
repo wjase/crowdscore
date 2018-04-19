@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+
+	"github.com/wjase/crowdscore/db"
 )
 
 // RestStatus obj for json status
@@ -30,4 +32,9 @@ func WriteRestResponse(toWrite interface{}, w *http.ResponseWriter) (err error) 
 	default:
 		return nil
 	}
+}
+
+//PrincipalFromContext gets the principal from the current context
+func PrincipalFromContext(r *http.Request) (db.User, error) {
+	return db.User{Username: "barry@barry.com"}, nil
 }

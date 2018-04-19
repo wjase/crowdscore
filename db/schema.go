@@ -15,15 +15,15 @@ type User struct {
 	Username string `json:"username" binding:"required"`
 	// Password     string `json:"password" binding:"required"`
 	DisplayName  string `json:"displayName"`
-	DepartmentID int    `json:"department"`
+	DepartmentID uint   `json:"department"`
 }
 
 type TeamMember struct {
 	gorm.Model
 	User   User
-	UserID int
+	UserID uint
 	Team   Team
-	TeamID int
+	TeamID uint
 }
 
 // UserPassword set the password for a user
@@ -54,7 +54,7 @@ type Heat struct {
 type TeamsInHeat struct {
 	gorm.Model
 	TeamID  int
-	RoundID int
+	RoundID uint
 }
 
 type Department struct {
@@ -64,6 +64,7 @@ type Department struct {
 
 type ScoringCategory struct {
 	gorm.Model
+	Slug        string
 	Order       int
 	DisplayText string
 	Description string
@@ -74,17 +75,17 @@ type ScoringCategory struct {
 
 type SingleVoteRegister struct {
 	gorm.Model
-	UserID    int
-	HeatID    int
-	ProjectID int
+	User string
+	Heat string
+	Team string
 }
 
 type Score struct {
 	gorm.Model
-	UserID    int
-	HeatID    int
-	ProjectID int
-	Rating    int
+	HeatID     int
+	TeamID     int
+	CategoryID uint
+	Rating     int
 }
 
 func Init(LoadedDB *gorm.DB) {

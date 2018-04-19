@@ -1,1 +1,2 @@
 // export const SOME_CONST = 'SOME_CONST';
+ export const LOAD_TEAMLIST_SUCCESS = 'LOAD_TEAMLIST_SUCCESS';

@@ -26,11 +26,8 @@ func main() {
 	router := mux.NewRouter()
 	handleStatics(router, "css", "js", "img")
 
-	router.PathPrefix("/api").
-		Subrouter().
-		HandleFunc("/jason", serveJason)
 	initialiseAPIRouting(router)
-	router.HandleFunc("/app/", serveTemplate)
+	router.PathPrefix("/app").HandlerFunc(serveTemplate)
 	router.HandleFunc("/", redirectHome)
 	log.Println("Listening...")
 	http.ListenAndServe(":3000", router)
@@ -64,15 +61,8 @@ func serveAPI(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func serveJason(w http.ResponseWriter, r *http.Request) {
-	path := filepath.Clean(r.URL.Path)
-	path = strings.TrimPrefix(path, "/jason/")
-	fmt.Fprintf(w, "A jason message from the other side:"+path)
-
-}
-
 func redirectHome(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "app/", 301)
+	http.Redirect(w, r, "/app/", 301)
 
 }
 
@@ -100,6 +90,7 @@ func serveTemplate(w http.ResponseWriter, r *http.Request) {
 
 	// Return a 404 if the request is for a directory
 	if info.IsDir() {
+		fmt.Println("404:" + path)
 		http.NotFound(w, r)
 		return
 	}

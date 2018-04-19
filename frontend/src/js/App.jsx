@@ -21,12 +21,19 @@ import Value from 'grommet/components/Value';
 import Split from 'grommet/components/Split';
 
 import UserLogin from './components/Login'
+import TeamList from './components/TeamList'
+import Rounds from './components/Rounds'
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import configureStore from './store/configure';
+import {loadTeams} from './components/TeamList/actions';
+import {loadRounds} from './components/Rounds/actions';
 
-const store = configureStore();
+const store = configureStore({});
+
+// initial rest fetch
+store.dispatch(loadTeams());
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Switch from 'react-router-dom/Switch';
@@ -46,14 +53,6 @@ const Home = () => (
     </Box>
   </div>
 
-);
-
-const Rounds = () => (
-  <div>Hello rounds</div>
-);
-
-const Projects = () => (
-  <div>Hello projects</div>
 );
 
 const Topics = ({ match }) => (
@@ -80,14 +79,12 @@ const Topics = ({ match }) => (
   </div>
 );
 
-const Topic = ({ match }) => (
-  <div>
-    <h3>{match.params.topicId}</h3>
-  </div>
-);
-
-
 class MainApp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {showNav: true};
+  }
+
   render() {
     return (
       <Provider store={store}>
@@ -96,23 +93,16 @@ class MainApp extends Component {
           <Split
             fixed={false}
             flex='right'
+            
           >
             <Sidebar pad='medium'>
               <Menu responsive={true}>
-                <Link to='/app/login'>
-                  Login
-                </Link>
-
                 <Link to='/app/'
                   className='active'>
                   Home
                 </Link>
-
-                <Link to='/app/topics'>
-                  Topics
-                </Link>
-                <Link to='/app/projects'>
-                  Projects
+                <Link to='/app/teams'>
+                  Teams
                 </Link>
                 <Link to='/app/rounds'>
                   Rounds
@@ -124,7 +114,8 @@ class MainApp extends Component {
               pad='medium'>
               <Header direction="row" size="medium"
                 pad={{ horizontal: 'small' }}>
-                <Title>CodeBlitz Rate-o-tron</Title>
+                {/* <button onClick={() => this.setState({showNav: true})}>Nav</button> */}
+                <Title>CodeBlitz CrowdScore</Title>
               </Header>
               <Box
                 full='vertical'
@@ -132,17 +123,15 @@ class MainApp extends Component {
                 <Switch>
                   <Route exact path="/app/" component={Home} />
                   <Route path="/app/about" component={About} />
-                  <Route path="/app/login" component={UserLogin} />
-                  <Route path="/app/topics" component={Topics} />
+                  <Route path="/app/teams" component={TeamList} />
                   <Route path="/app/rounds" component={Rounds} />
-                  <Route path="/app/projects" component={Projects} />
                 </Switch>
               </Box>
               <Footer fixed={true} primary={true} appCentered={false} direction="column"
-                align="center" pad="small" colorIndex="grey-1"
+                align="center" pad="small" colorIndex="grey-2"
               >
                 <p>
-                  Build your ideas with <a href="http://grommet.io" target="_blank">Grommet</a>!
+                  CrowdScore - Letting the people speak.
           </p>
               </Footer>
             </Box>
