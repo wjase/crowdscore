@@ -24,6 +24,8 @@ import {loadRounds} from './components/Rounds/actions';
 import {BrowserRouter as Router, Link, Route} from "react-router-dom";
 import Switch from 'react-router-dom/Switch';
 import MenuIcon from 'grommet/components/icons/base/Menu';
+import Vote from "./components/Vote/Vote";
+
 
 const store = configureStore({});
 
@@ -90,6 +92,9 @@ class MainApp extends Component {
                                           className='active'>
                                         Home
                                     </Link>
+                                    <Link to='/app/vote'>
+                                        Vote
+                                    </Link>
                                     <Link to='/app/teams'>
                                         Teams
                                     </Link>
@@ -113,6 +118,7 @@ class MainApp extends Component {
                                     <Switch>
                                         <Route exact path="/app/" component={Home}/>
                                         <Route path="/app/about" component={About}/>
+                                        <Route path="/app/vote" component={Vote}/>
                                         <Route path="/app/teams" component={TeamList}/>
                                         <Route path="/app/rounds" component={Rounds}/>
                                     </Switch>

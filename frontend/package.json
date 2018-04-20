@@ -37,6 +37,7 @@
     "webpack-dev-server": ">=3.1.1"
   },
   "dependencies": {
+    "react-rating": "^1.1.2",
     "react-router-dom": "^4.2.2",
     "redux-thunk": "^2.2.0",
     "webpack-preset": "^0.2.0",
